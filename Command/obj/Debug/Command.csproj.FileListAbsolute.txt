@@ -1,0 +1,6 @@
+C:\Users\User\Documents\GitHub\Command\Command\bin\Debug\Command.exe
+C:\Users\User\Documents\GitHub\Command\Command\bin\Debug\Command.pdb
+C:\Users\User\Documents\GitHub\Command\Command\obj\Debug\Command.csprojResolveAssemblyReference.cache
+C:\Users\User\Documents\GitHub\Command\Command\obj\Debug\Command.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\GitHub\Command\Command\obj\Debug\Command.exe
+C:\Users\User\Documents\GitHub\Command\Command\obj\Debug\Command.pdb
