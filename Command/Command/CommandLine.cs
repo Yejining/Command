@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
 
 using Command.Data;
 
@@ -10,29 +9,22 @@ namespace Command.Command
 {
     class CommandLine
     {
-        private string path;
+        FolderPath folderPath;
 
+        /// <summary>
+        /// 프로그램이 실행될 때 호출되는 메소입니다.
+        /// 파일 경로를 초기화하고 사용자로부터 명령문을 입력받습니다.
+        /// </summary>
         public void RunCommand()
         {
             Console.Write(Constant.START);
-
-            path = Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).FullName;
-
-            if (Environment.OSVersion.Version.Major >= 6)
-            {
-                path = Directory.GetParent(path).ToString();
-            }
-
-            path = path.Insert(path.Length, ">");
-
+            folderPath = FolderPath.GetInstance();
             ReadCommand();
         }
 
         public void ReadCommand()
         {
-
-
-            Console.Write(path);
+            Console.Write(folderPath.PathToUse());
 
         }
     }

@@ -43,6 +43,9 @@
     <Compile Include="Command\CommandLine.cs" />
     <Compile Include="Data\Constant.cs" />
     <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\FolderPath.cs" />
+    <Compile Include="IOException\InputProcessor.cs" />
+    <Compile Include="IOException\OutputProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
