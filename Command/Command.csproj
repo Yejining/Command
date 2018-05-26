@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Command\CommandLine.cs" />
     <Compile Include="Data\Constant.cs" />
-    <Compile Include="Data\Database.cs" />
     <Compile Include="Data\FolderPath.cs" />
     <Compile Include="IOException\CursorPosition.cs" />
     <Compile Include="IOException\InputProcessor.cs" />

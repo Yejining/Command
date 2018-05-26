@@ -74,6 +74,7 @@ namespace Command.IOException
                         command = "";
                         break;
                     case Constant.ENTER:
+                        Console.SetCursorPosition(0, cursorTop + 1);
                         return command;
                     case Constant.TAB:      // 입력 무시
                         SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);

@@ -24,10 +24,38 @@ namespace Command.Command
             ReadCommand();
         }
 
+        /// <summary>
+        /// 사용자로부터 명령어를 입력받고 실행하는 메소드입니다.
+        /// </summary>
         public void ReadCommand()
         {
             string command = outputProcessor.GetCommand();
-            Console.Write($"command = {command}");
+            string[] words = command.Split(' ');
+
+            if (words[0].Length != 0)
+                if (words[0][words[0].Length - 1] == ';')
+                    words[0] = words[0].Remove(words[0].Length - 1);
+
+            switch (words[0].ToLower())
+            {
+                case "cls":
+                    Console.Clear();
+                    Console.WriteLine();
+                    ReadCommand();
+                    return;
+                case "help":
+                    outputProcessor.PrintHelp();
+                    Console.WriteLine();
+                    ReadCommand();
+                    return;
+                case "":
+                    ReadCommand();
+                    return;
+                case "exit":
+                    return;
+                default:
+                    break;
+            }
         }
     }
 }
