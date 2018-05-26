@@ -9,6 +9,8 @@ namespace Command.Data
     {
         public const string START = "Microsoft Windows [Version 10.0.16299.431]\n(c) 2017 Microsoft Corporation. All rights reserved.\n\n";
 
+        public const string VALID_LETTER = "[0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣[`~!@#$%^&*()\\-_=+\\{\\}\\[\\]\\\\\\|:;\"\'<>,.?/ ]";
+
         public const int ESC = 0;
         public const int ENTER = 1;
         public const int TAB = 2;

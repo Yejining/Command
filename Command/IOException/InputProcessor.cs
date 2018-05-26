@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Command.Data;
 
@@ -69,18 +70,21 @@ namespace Command.IOException
                 switch(PressOrderKey())
                 {
                     case Constant.ESC:
+                        ClearCommandLine(cursorLeft, cursorTop, command);
                         command = "";
-                        SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
                         break;
                     case Constant.ENTER:
                         return command;
                     case Constant.TAB:      // 입력 무시
+                        SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         break;
                     case Constant.UP:       // 입력 무시
+                        SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         break;
                     case Constant.DOWN:     // 입력 무시
+                        SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
                         Console.SetCursorPosition(cursorLeft, cursorTop);
                         break;
                     case Constant.LEFT:
@@ -93,7 +97,7 @@ namespace Command.IOException
                         command = RemoveOneLetter(cursorLeft, cursorTop, command);
                         break;
                     case Constant.CHARACTER:
-                        command += userInputCharacter;
+                        command = AddOneLetter(cursorLeft, cursorTop, command);
                         break;
                 }
             }
@@ -111,10 +115,7 @@ namespace Command.IOException
 
             if (cursorPosition.CursorTop < cursorTop)
             {
-                if (0 < cursorLeft)
-                    Console.SetCursorPosition(cursorLeft - 1, cursorTop);
-                else
-                    Console.SetCursorPosition(Console.WindowWidth - 1, cursorTop - 1);
+                MoveLeft(cursorLeft, cursorTop);
             }
             else
             {
@@ -123,6 +124,20 @@ namespace Command.IOException
                 else
                     Console.SetCursorPosition(cursorLeft, cursorTop);
             }
+        }
+        
+        /// <summary>
+        /// 커서를 왼쪽으로 옮기는 메소드입니다.
+        /// 명령문의 시작줄과 현재 커서가 위치한 줄이 다를때 적용시킵니다.
+        /// </summary>
+        /// <param name="cursorLeft">커서 위치</param>
+        /// <param name="cursorTop">커서 위치</param>
+        public void MoveLeft(int cursorLeft, int cursorTop)
+        {
+            if (0 < cursorLeft)
+                Console.SetCursorPosition(cursorLeft - 1, cursorTop);
+            else
+                Console.SetCursorPosition(Console.WindowWidth - 1, cursorTop - 1);
         }
 
         /// <summary>
@@ -137,18 +152,31 @@ namespace Command.IOException
 
             if (cursorPosition.CursorTop < cursorTop)
             {
-                if (cursorPosition.CursorLeft + command.Length - Console.WindowWidth > cursorLeft)
-                    Console.SetCursorPosition(cursorLeft + 1, cursorTop);
+                if (IndexOfCommand(cursorLeft, cursorTop, command) < command.Length)
+                    MoveRight(cursorLeft, cursorTop);
                 else
                     Console.SetCursorPosition(cursorLeft, cursorTop);
             }
             else
             {
-                if (Console.WindowWidth - 1 > cursorLeft)
-                    Console.SetCursorPosition(cursorLeft + 1, cursorTop);
+                if (cursorLeft - cursorPosition.CursorLeft < command.Length)
+                    MoveRight(cursorLeft, cursorTop);
                 else
-                    Console.SetCursorPosition(0, cursorTop + 1);
+                    Console.SetCursorPosition(cursorLeft, cursorTop);
             }
+        }
+
+        /// <summary>
+        /// 커서를 오른쪽으로 옮기는 메소드입니다.
+        /// </summary>
+        /// <param name="cursorLeft">이전 커서 위치</param>
+        /// <param name="cursorTop">이전 커서 위치</param>
+        public void MoveRight(int cursorLeft, int cursorTop)
+        {
+            if (cursorLeft < Console.WindowWidth - 1)
+                Console.SetCursorPosition(cursorLeft + 1, cursorTop);
+            else
+                Console.SetCursorPosition(0, cursorTop + 1);
         }
 
         /// <summary>
@@ -160,26 +188,46 @@ namespace Command.IOException
         /// <returns></returns>
         public string RemoveOneLetter(int cursorLeft, int cursorTop, string command)
         {
-            if (command.Length == 0)
+            // 커서가 문자열 앞에 있는 경우
+            if (cursorPosition.CursorTop == cursorTop && cursorPosition.CursorLeft == cursorLeft)
             {
-                Console.SetCursorPosition(cursorLeft, cursorTop);
+                Console.SetCursorPosition(cursorPosition.CursorLeft, cursorPosition.CursorTop);
                 return command;
             }
 
-            if (cursorPosition.CursorTop < Console.CursorTop)
+            if (cursorPosition.CursorTop < cursorTop)
             {
-                command = command.Remove(Console.WindowWidth - cursorPosition.CursorLeft + Console.CursorLeft, 1);
-                SetCursorPositionAndWrite(0, Console.CursorTop, new string(' ', Console.WindowWidth));
-                SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
-                Console.SetCursorPosition(cursorLeft - 1, Console.CursorTop);
+                command = command.Remove(IndexOfCommand(cursorLeft, cursorTop, command) - 1, 1);
             }
-            else
+            else if (cursorPosition.CursorLeft != cursorLeft)
             {
-                command = command.Remove(Console.CursorLeft - cursorPosition.CursorLeft, 1);
-                SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, new string(' ', Console.WindowWidth - Console.CursorLeft));
-                SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
-                Console.SetCursorPosition(cursorLeft - 1, Console.CursorTop);
+                command = command.Remove(cursorLeft - cursorPosition.CursorLeft - 1, 1);
             }
+
+            SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, new string(' ', command.Length + 1));
+            SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
+            MoveLeft(cursorLeft, cursorTop);
+
+            return command;
+        }
+
+        /// <summary>
+        /// 입력받은 문자가 유효한 값일 경우 명령문에 해당 문자를 추가하는 메소드입니다.
+        /// </summary>
+        /// <param name="cursorLeft">커서 위치</param>
+        /// <param name="cursorTop">커서 위치</param>
+        /// <param name="command">이전에 입력받은 명령어</param>
+        /// <returns>갱신된 명령어</returns>
+        public string AddOneLetter(int cursorLeft, int cursorTop, string command)
+        {
+            if (Regex.IsMatch(userInputCharacter.ToString(), Constant.VALID_LETTER))
+            {
+                command = command.Insert(IndexOfCommand(cursorLeft, cursorTop, command), userInputCharacter.ToString());
+                cursorLeft++;
+            }
+
+            SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, command);
+            Console.SetCursorPosition(cursorLeft, cursorTop);
 
             return command;
         }
@@ -194,6 +242,30 @@ namespace Command.IOException
         {
             Console.SetCursorPosition(cursorLeft, cursorTop);
             Console.Write(comment);
+        }
+
+        /// <summary>
+        /// 입력된 명령어를 지우고 커서를 초기화하는 메소드입니다.
+        /// </summary>
+        /// <param name="cursorLeft">커서 위치</param>
+        /// <param name="cursorTop">커서 위치</param>
+        /// <param name="command">명령문</param>
+        public void ClearCommandLine(int cursorLeft, int cursorTop, string command)
+        {
+            SetCursorPositionAndWrite(cursorPosition.CursorLeft, cursorPosition.CursorTop, new string(' ', command.Length + 1));
+            Console.SetCursorPosition(cursorPosition.CursorLeft, cursorPosition.CursorTop);
+        }
+
+        /// <summary>
+        /// 커서가 위치하고 있는 명령문의 인덱스를 반환하는 메소드입니다.
+        /// </summary>
+        /// <param name="cursorLeft">커서 위치</param>
+        /// <param name="cursorTop">커서 위치</param>
+        /// <param name="command">명령문</param>
+        /// <returns>커서가 위치한 명령문의 인덱스</returns>
+        public int IndexOfCommand(int cursorLeft, int cursorTop, string command)
+        {
+            return Console.WindowWidth - cursorPosition.CursorLeft + ((cursorTop - cursorPosition.CursorTop - 1) * Console.WindowWidth) + cursorLeft;
         }
     }
 }
