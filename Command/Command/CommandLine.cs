@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 
 using Command.Data;
+using Command.IOException;
 
 namespace Command.Command
 {
     class CommandLine
     {
+        OutputProcessor outputProcessor = new OutputProcessor();
         FolderPath folderPath;
 
         /// <summary>
@@ -24,8 +26,8 @@ namespace Command.Command
 
         public void ReadCommand()
         {
-            Console.Write(folderPath.PathToUse());
-
+            string command = outputProcessor.GetCommand();
+            Console.Write($"command = {command}");
         }
     }
 }
