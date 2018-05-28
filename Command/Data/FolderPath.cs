@@ -39,6 +39,16 @@ namespace Command.Data
             }
         }
 
+        /// <summary>
+        /// 경로를 변경하는 메소드입니다.
+        /// </summary>
+        /// <param name="path">새로운 경로</param>
+        public void SetCurrentDirectory(string path)
+        {
+            Directory.SetCurrentDirectory(path);
+            this.path = Directory.GetCurrentDirectory();
+        }
+
         public string PathToUse()
         {
             return path + ">";

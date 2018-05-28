@@ -27,7 +27,7 @@ namespace Command.IOException
         /// <returns>명령어</returns>
         public string GetCommand()
         {
-            Console.Write(folderPath.PathToUse());
+            Console.Write("\n" + folderPath.PathToUse());
             return inputProcessor.CommandFromUser();
         }
 

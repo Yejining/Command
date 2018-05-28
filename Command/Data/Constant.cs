@@ -7,10 +7,35 @@ namespace Command.Data
 {
     class Constant
     {
-        public const string START = "Microsoft Windows [Version 10.0.16299.431]\n(c) 2017 Microsoft Corporation. All rights reserved.\n\n";
+        // 시작화면
+        public const string START = "Microsoft Windows [Version 10.0.16299.431]\n(c) 2017 Microsoft Corporation. All rights reserved.\n";
 
+        // 정규식
+        public static char[] SEPERATOR = { ' ' }; 
         public const string VALID_LETTER = "[0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣[`~!@#$%^&*()\\-_=+\\{\\}\\[\\]\\\\\\|:;\"\'<>,.?/ ]";
+        public const string VALID_CD = "^(cd).*";
+        public const string NEGLIGIBLE = "^[;,=]+$";
+        public const string CONSIDERABLE = "[.:\\\\/]";
+        public const string NEGLIGIBLE_TO_DELETE = "^[;,=]*(?=[.\\\\/])|^[;,=]*(?=[a-zA-Z]:)";
+        public const string KEEP_BEFORE_AMPERSAND = "&(?<=&).*";
+        public const string DELETE_BEFORE_AMPERSAND = "[^&]*(?=&)";
+        public const string UNC_PATH_DETECTER = "^[\\\\|/]{2,}?";
 
+        // CD ERROR
+        public const string PATH_ERROR = "지정된 경로를 찾을 수 없습니다.";
+        public const string UNC_PATH_ERROR = "CMD에서 현재 디렉터리로 UNC 경로를 지원하지 않습니다.";
+
+        public const string NOT_EXCUTABLE = "은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.";
+
+        // 기능 이름
+        public const string CD = "CD";
+        public const string DIR = "DIR";
+        public const string CLS = "CLS";
+        public const string HELPa = "HELP";
+        public const string COPY = "COPY";
+        public const string MOVE = "MOVE";
+
+        // 키보드 키 상수
         public const int ESC = 0;
         public const int ENTER = 1;
         public const int TAB = 2;
@@ -21,6 +46,7 @@ namespace Command.Data
         public const int BACK = 7;
         public const int CHARACTER = 8;
 
+        // HELP 명령어
         public static string[] HELP =
         {
             "특정 명령어에 대한 자세한 내용이 필요하면 HELP 명령어 이름을 입력하십시오.",
