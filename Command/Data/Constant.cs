@@ -19,13 +19,16 @@ namespace Command.Data
         public const string NEGLIGIBLE_TO_DELETE = "^[;,=]*(?=[.\\\\/])|^[;,=]*(?=[a-zA-Z]:)";
         public const string KEEP_BEFORE_AMPERSAND = "&(?<=&).*";
         public const string DELETE_BEFORE_AMPERSAND = "[^&]*(?=&)";
-        public const string UNC_PATH_DETECTER = "^[\\\\|/]{2,}?";
+        public const string UNC_PATH_DETECTER = "^[\\\\]{2,}?";
+        public const string DRIVE_DETECTER = ".*(?=:)";
 
         // CD ERROR
         public const string PATH_ERROR = "지정된 경로를 찾을 수 없습니다.";
         public const string UNC_PATH_ERROR = "CMD에서 현재 디렉터리로 UNC 경로를 지원하지 않습니다.";
 
         public const string NOT_EXCUTABLE = "은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.";
+        public const string UNFINDABLE_DRIVE = "시스템이 지정된 드라이브를 찾을 수 없습니다.";
+        public const string PATH_MISINPUT = "파일 이름, 디렉터리 이름 또는 볼륨 레이블 구분이 잘못되었습니다.";
 
         // 기능 이름
         public const string CD = "CD";

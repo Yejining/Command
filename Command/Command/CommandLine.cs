@@ -55,7 +55,6 @@ namespace Command.Command
                     return;
                 case "cls":
                     Console.Clear();
-                    Console.WriteLine();
                     ReadCommand();
                     return;
                 case "help":
@@ -155,6 +154,8 @@ namespace Command.Command
                 return;
             }
 
+            string currentDirectory = Path.GetPathRoot(Environment.CurrentDirectory).ToString().ToLower();
+
             // 1. 경로로 들어가기
             if (words.Count == 0)
             {
@@ -162,13 +163,74 @@ namespace Command.Command
                 ExecuteBasedOnAmpersand(newCommand);
                 return;
             }
+            else if (words[0] == currentDirectory.Remove(currentDirectory.Length - 1))
+            {
+                Console.WriteLine(folderPath.Path);
+                ExecuteBasedOnAmpersand(newCommand);
+                return;
+            }
+
+            // 시스템이 지정된 드라이브를 찾을 수 없거나
+            // 파일 이름, 디렉터리 이름 또는 볼륨 레이블 구분이 잘못될 경우
+            if (!IsAvaliableDrive(words[0]))
+            {
+                ExecuteBasedOnAmpersand(newCommand);
+                return;
+            }
+
+            command = "";
+            foreach(string word in words)
+            {
+                command += $"{word} ";
+            }
+            command.Remove(command.Length - 1);
 
             // 지정된 경로를 찾을 수 없는 경우
-
+            if (!Directory.Exists(command))
+            {
+                Console.WriteLine(Constant.PATH_ERROR);
+                ExecuteBasedOnAmpersand(newCommand);
+                return;
+            }
 
             // 경로 이동
             folderPath.SetCurrentDirectory(words[0]);
             ExecuteBasedOnAmpersand(newCommand);
+        }
+
+        /// <summary>
+        /// 사용자로부터 입력받은 드라이브의 이름이 컴퓨터에 존재하는지 확인하는 메소드입니다.
+        /// </summary>
+        /// <param name="driveName">사용자가 입력한 드라이브명</param>
+        /// <returns>사용자 입력 드라이브 존재여부</returns>
+        public bool IsDriveExist(string driveName)
+        {
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            foreach (DriveInfo drive in allDrives)
+            {
+                if (string.Compare(driveName, drive.ToString(), true) == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsAvaliableDrive(string command)
+        {
+            string match = new Regex(Constant.DRIVE_DETECTER).Match(command).ToString();
+
+            if (match.Length == 0) return true;
+
+            if (!IsDriveExist(match))
+            {
+                if (match.Length != 1) Console.WriteLine(Constant.PATH_MISINPUT);
+                else Console.WriteLine(Constant.UNFINDABLE_DRIVE);
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -185,7 +247,6 @@ namespace Command.Command
             // '&' 이후 명령어
             regex = new Regex(Constant.DELETE_BEFORE_AMPERSAND);
             string match = regex.Match(command).ToString() + "&";
-            newCommand = command.Replace(command, match);
             newCommand = command.Replace(match, "");
 
             // '&' 이전 명령어
