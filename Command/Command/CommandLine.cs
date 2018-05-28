@@ -40,7 +40,14 @@ namespace Command.Command
         public void ExecuteCommand(string command)
         {
             string[] words = command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries);
-            
+
+            command = "";
+            foreach(string word in words)
+            {
+                command += $"{word} ";
+            }
+            command = command.Remove(command.Length - 1);
+
             if (words.Count() == 0)
             {
                 ReadCommand();
@@ -51,7 +58,6 @@ namespace Command.Command
             {
                 case "cd":
                     CD(command);
-                    ReadCommand();
                     return;
                 case "cls":
                     Console.Clear();
@@ -77,10 +83,14 @@ namespace Command.Command
         public void FilterValidOrder(string command)
         {
             // cd 명령어
-            if (Regex.IsMatch(command, Constant.VALID_CD))
+            if (Regex.IsMatch(command.ToLower(), Constant.VALID_CD))
             {
                 CD(command);
-                ReadCommand();
+                return;
+            }
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_DIR))
+            {
+                DIR(command.ToLower());
                 return;
             }
             else
@@ -89,13 +99,14 @@ namespace Command.Command
                 if (Regex.IsMatch(command, "&")) SplitBasedOnAmpersand(command, out command, out newCommand);
                 Console.WriteLine($"\'{command}\'{Constant.NOT_EXCUTABLE}");
                 ExecuteBasedOnAmpersand(newCommand);
+                return;
             }
         }
 
         /// <summary>
         /// CD 명령어를 실행하는 메소드입니다.
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">명령어</param>
         public void CD(string command)
         {
             List<string> words;
@@ -196,6 +207,41 @@ namespace Command.Command
             // 경로 이동
             folderPath.SetCurrentDirectory(words[0]);
             ExecuteBasedOnAmpersand(newCommand);
+        }
+
+        /// <summary>
+        /// DIR 명령어를 실행하는 메소드입니다.
+        /// </summary>
+        /// <param name="command">명령어</param>
+        public void DIR(string command)
+        {
+            Regex regex;
+
+            // 명령어 바로 뒤에 큰 따옴표가 있는지 검사
+            if (Regex.IsMatch(command, Constant.DETECT_DOUBLE_QUOTATION_AFTER_DIR))
+            {
+                regex = new Regex("[:\\\\]");
+                string match = regex.Match(command.Remove(0, 4)).ToString();
+                
+                if (match.Length == 0)      // 상대경로
+                {
+                    Console.WriteLine($"\'{command}\'{Constant.NOT_EXCUTABLE}");
+                }
+                else if (match == "\\")     // \ 절대경로
+                {
+                    Console.WriteLine(Constant.PATH_ERROR);
+                }
+                else if (match == ":")      // 드라이브 절대경로
+                {
+                    regex = new Regex("^.*:\\\\[^\\.]");
+                    match = regex.Match(command.Remove(0, 4)).ToString();
+                    if (match.Length == 0) Console.WriteLine($"\'{command}\'{Constant.NOT_EXCUTABLE}");
+                    else Console.WriteLine(Constant.PATH_MISINPUT);
+                }
+
+                ReadCommand();
+                return;
+            }
         }
 
         /// <summary>
