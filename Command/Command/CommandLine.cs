@@ -41,19 +41,20 @@ namespace Command.Command
         {
             string[] words = command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries);
 
+            if (words.Count() == 0)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                ReadCommand();
+                return;
+            }
+
             command = "";
             foreach(string word in words)
             {
                 command += $"{word} ";
             }
             command = command.Remove(command.Length - 1);
-
-            if (words.Count() == 0)
-            {
-                ReadCommand();
-                return;
-            }
-
+            
             switch (words[0].ToLower())
             {
                 case "cd":
@@ -202,6 +203,7 @@ namespace Command.Command
             // 경로 이동
             folderPath.SetCurrentDirectory(words[0]);
             ExecuteBasedOnAmpersand(newCommand);
+            return;
         }
 
         /// <summary>
