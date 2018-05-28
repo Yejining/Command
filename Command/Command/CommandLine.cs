@@ -282,9 +282,11 @@ namespace Command.Command
             // 경로가 0-1개만 입력된다고 가정
             // 경로에서 &가 등장하지 않는다고 가정
             string currentDirectory = Path.GetPathRoot(Environment.CurrentDirectory);
+            currentDirectory = currentDirectory.Remove(currentDirectory.Length - 1).ToLower();
+
             string path;
 
-            if (command.Length == 0 || command == currentDirectory.Remove(currentDirectory.Length - 1))
+            if (command.Length == 0 || command == currentDirectory)
             {
                 path = folderPath.Path;
             }

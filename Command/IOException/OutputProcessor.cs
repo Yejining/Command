@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
+using System.Management;
+using System.Collections;
+using System.Text;
+using System.Security.AccessControl;
 
 using Command.Data;
 
@@ -49,9 +52,67 @@ namespace Command.IOException
         /// <param name="path">폴더 또는 파일 경로</param>
         public void DIR(string path)
         {
+            ArrayList hardDriveDetails = new ArrayList();
             DriveInfo drive = new DriveInfo(path);
+            DirectoryInfo dInfo = new DirectoryInfo(path);
+            DirectorySecurity dSecurity = dInfo.GetAccessControl();
 
+            // 드라이브 볼륨
+            if (drive.VolumeLabel.Length == 0) Console.WriteLine($" {path[0].ToString().ToUpper()} 드라이브의 볼륨에는 이름이 없습니다.");
+            else Console.WriteLine(drive.VolumeLabel);
 
+            // 드라이브 일련 번호
+            ManagementObjectSearcher moSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+            foreach (ManagementObject wmi_HD in moSearcher.Get())
+            {
+                string serialNo = wmi_HD["SerialNumber"].ToString();
+                Console.WriteLine($" 드라이브 일련 번호 : {serialNo}");
+            }
+
+            // 디렉터리
+            Console.WriteLine($"\n {path} 디렉터리\n");
+
+            // 정보
+            List<SubFileDirectoryVO> subFileDirectoryVOList = new List<SubFileDirectoryVO>();
+            string[] folders = Directory.GetDirectories(path);
+            string[] files = Directory.GetFiles(path);
+            int folderCount = 0;
+            int fileCount = 0;
+
+            foreach (string subFolder in folders)
+            {
+                string folder = Path.Combine(path, subFolder);
+                DirectoryInfo info = new DirectoryInfo(folder);
+                if ((info.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                {
+                    subFileDirectoryVOList.Add(new SubFileDirectoryVO { Date = info.LastAccessTime.ToShortDateString(), Time = info.LastAccessTime.ToShortTimeString(), Name = info.Name, Size = 0 });
+                    folderCount++;
+                }
+            }
+
+            foreach (string subFile in files)
+            {
+                string file = Path.Combine(path, subFile);
+                FileInfo info = new FileInfo(file);
+                if ((info.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                {
+                    subFileDirectoryVOList.Add(new SubFileDirectoryVO { Date = info.LastAccessTime.ToShortDateString(), Time = info.LastAccessTime.ToShortTimeString(), Name = info.Name, Size = info.Length });
+                    fileCount++;
+                }
+            }
+
+            IOrderedEnumerable<SubFileDirectoryVO> ordered = subFileDirectoryVOList.OrderBy(x => x.Name);
+            // 출력
+            long size = 0;
+            foreach (SubFileDirectoryVO sub in ordered)
+            {
+                Console.WriteLine($"{sub.Date}\t{sub.Time}\t{sub.Size}\t{sub.Name}");
+                size += sub.Size;
+            }
+            Console.WriteLine($"{fileCount}개의 파일\t{size} 바이트");
+            Console.WriteLine($"{folderCount}개의 디렉터리\t{drive.TotalFreeSpace} 바이트 남음");
         }
+
+
     }
 }
