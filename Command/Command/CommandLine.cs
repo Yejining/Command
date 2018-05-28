@@ -94,6 +94,16 @@ namespace Command.Command
                 DIR(command.ToLower());
                 return;
             }
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_COPY))
+            {
+                Copy(command.ToLower());
+                return;
+            }
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_MOVE))
+            {
+                Move(command.ToLower());
+                return;
+            }
             else
             {
                 string newCommand = "";
@@ -300,6 +310,100 @@ namespace Command.Command
             outputProcessor.DIR(path);
             ReadCommand();
             return;
+        }
+
+        public static string NormalizePath(string path)
+        {
+            return Path.GetFullPath(new Uri(path).LocalPath)
+                       .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                       .ToUpperInvariant();
+        }
+
+        /// <summary>
+        /// Copy 명령어를 실행하는 메소드입니다.
+        /// </summary>
+        /// <param name="command">명령어</param>
+        public void Copy(string command)
+        {
+            // 경로에 쌍따옴표가 없다고 가정
+            // 정상적인 경로가 입력될 것으로 가정
+            // 지정된 파일이 있을 것으로 가정
+            List<string> words;
+            words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
+            words.RemoveAt(0);
+
+            // 1번 txt를 현재 경로에 저장
+            if (words.Count == 1)
+            {
+                // source가 경로를 가지고 있는 경우
+                string fileName = Path.GetFileName(words[0]);
+                string source = Path.GetDirectoryName(words[0]);
+
+                bool isEqual;
+
+                if (source.Length != 0) isEqual = NormalizePath(source) == NormalizePath(folderPath.Path);
+                else isEqual = false;
+                ;
+                // 해당 경로에서 현재 경로로 저장
+                if (Regex.IsMatch(words[0], "\\\\") && !isEqual)
+                {
+                    File.Copy(Path.Combine(source, fileName), Path.Combine(folderPath.Path, fileName), true);
+                    Console.WriteLine("1개 파일이 복사되었습니다.");
+                }
+                else
+                {
+                    Console.WriteLine("같은 파일로 복사할 수 없습니다.");
+                    Console.WriteLine("0개 파일이 복사되었습니다.");
+                }
+                ReadCommand();
+                return;
+            }
+
+            string sourcePath, sourceName;
+            string destinationPath, destinationName;
+            bool isPathEqual;
+
+            sourcePath = Path.GetDirectoryName(words[0]);
+            if (sourcePath.Length == 0) sourcePath = folderPath.Path;
+            sourceName = Path.GetFileName(words[0]);
+            destinationPath = Path.GetDirectoryName(words[1]);
+            if (destinationPath.Length == 0) destinationPath = folderPath.Path;
+            destinationName = Path.GetFileName(words[1]);
+
+            isPathEqual = NormalizePath(sourcePath) == NormalizePath(destinationPath);
+
+            if (isPathEqual)
+            {
+                // 경로와 이름이 같은 경우
+                if (string.Compare(sourceName, sourcePath) == 0)
+                {
+                    Console.WriteLine("같은 파일로 복사할 수 없습니다.");
+                    Console.WriteLine("0개 파일이 복사되었습니다.");
+                }
+                else
+                {
+                    File.Copy(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName), true);
+                    Console.WriteLine("1개 파일이 복사되었습니다.");
+                }
+            }
+            else
+            {
+                File.Copy(Path.Combine(sourcePath, sourcePath), Path.Combine(destinationPath, destinationName), true);
+                Console.WriteLine("1개 파일이 복사되었습니다.");
+            }
+            ReadCommand();
+            return;
+        }
+
+        /// <summary>
+        /// Move 명령어를 실행하는 메소드입니다.
+        /// </summary>
+        /// <param name="command">명령어</param>
+        public void Move(string command)
+        {
+            // 경로에 쌍따옴표가 없다고 가정
+            // 정상적인 경로가 입력될 것으로 가정
+            // 지정된 파일이 있을 것으로 가정
         }
 
         /// <summary>
