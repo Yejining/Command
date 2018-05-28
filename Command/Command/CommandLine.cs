@@ -133,11 +133,6 @@ namespace Command.Command
                     words[index] = regex.Replace(words[index], "", 1);
                     break;
                 }
-                //else if (index != 0)
-                //{
-                //    Console.WriteLine(Constant.PATH_ERROR);
-                //    return;
-                //}
             }
 
             // 경로(.:\/)가 나오기 전 입력 무시 - 2
@@ -216,6 +211,8 @@ namespace Command.Command
         public void DIR(string command)
         {
             Regex regex;
+            List<string> words;
+            List<int> indexToRemove = new List<int>();
 
             // 명령어 바로 뒤에 큰 따옴표가 있는지 검사
             if (Regex.IsMatch(command, Constant.DETECT_DOUBLE_QUOTATION_AFTER_DIR))
@@ -242,6 +239,63 @@ namespace Command.Command
                 ReadCommand();
                 return;
             }
+
+            // 명령어 삭제 및 경로 이전 필요없는 공백/문자(,;=) 삭제
+            words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
+
+            // 1. 명령어 삭제
+            words = RemoveFunctionName(words, Constant.DIR);
+
+            // 경로(.:\/)가 나오기 전 입력 무시 - 1
+            regex = new Regex(Constant.NEGLIGIBLE_TO_DELETE);
+            for (int index = 0; index < words.Count(); index++)
+            {
+                if (Regex.IsMatch(words[index], Constant.NEGLIGIBLE))
+                {
+                    indexToRemove.Add(index);
+                }
+                else if (Regex.IsMatch(words[index], Constant.CONSIDERABLE))
+                {
+                    words[index] = regex.Replace(words[index], "", 1);
+                    break;
+                }
+            }
+
+            // 경로(.:\/)가 나오기 전 입력 무시 - 2
+            for (int index = indexToRemove.Count() - 1; index >= 0; index--)
+            {
+                words.RemoveAt(indexToRemove[index]);
+            }
+
+            command = "";
+            foreach (string word in words)
+            {
+                command += $"{word} ";
+            }
+            command = command.Remove(command.Length - 1);
+
+            // 경로 나누기
+            // 1. 띄어쓰기 기준으로 나누기
+            // words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
+
+            // 경로 나누기 생략
+            // 경로가 0-1개만 입력된다고 가정
+            // 경로에서 &가 등장하지 않는다고 가정
+            string currentDirectory = Path.GetPathRoot(Environment.CurrentDirectory);
+            string path;
+
+            if (command.Length == 0 || command == currentDirectory.Remove(currentDirectory.Length - 1))
+            {
+                path = folderPath.Path;
+            }
+            else
+            {
+                path = command;
+            }
+
+            outputProcessor.DIR(path);
+            ReadCommand();
+            return;
         }
 
         /// <summary>

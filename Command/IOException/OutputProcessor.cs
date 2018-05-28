@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 using Command.Data;
 
@@ -40,6 +41,17 @@ namespace Command.IOException
             {
                 Console.WriteLine(help);
             }
+        }
+
+        /// <summary>
+        /// dir 명령어 실행시 path의 디렉터리 정보를 출력해주는 메소드입니다.
+        /// </summary>
+        /// <param name="path">폴더 또는 파일 경로</param>
+        public void DIR(string path)
+        {
+            DriveInfo drive = new DriveInfo(path);
+
+
         }
     }
 }
