@@ -404,6 +404,53 @@ namespace Command.Command
             // 경로에 쌍따옴표가 없다고 가정
             // 정상적인 경로가 입력될 것으로 가정
             // 지정된 파일이 있을 것으로 가정
+            // getdirectoryname, getfilename 오류 수정해야 함
+            List<string> words;
+            words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
+            words.RemoveAt(0);
+
+            string sourcePath, sourceName;
+            string destinationPath, destinationName;
+            bool isPathEqual;
+
+            sourcePath = Path.GetDirectoryName(words[0]);
+            if (sourcePath.Length == 0) sourcePath = folderPath.Path;
+            sourceName = Path.GetFileName(words[0]);
+
+            if (words.Count != 1)
+            {
+                destinationPath = Path.GetDirectoryName(words[1]);
+                if (destinationPath.Length == 0) destinationPath = folderPath.Path;
+                destinationName = Path.GetFileName(words[1]);
+                if (destinationName.Length == 0) destinationName = sourceName;
+            } 
+            else
+            {
+                destinationPath = folderPath.Path;
+                destinationName = "";
+            }
+
+            isPathEqual = NormalizePath(sourcePath) == NormalizePath(destinationPath);
+
+            if (isPathEqual)
+            {
+                if (destinationName.Length == 0)
+                {
+                    destinationName = sourceName;
+                }
+                if (string.Compare(sourceName, destinationName) != 0)
+                {
+                    File.Move(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName));
+                }
+                Console.WriteLine("1개 파일을 이동했습니다.");
+            }
+            else
+            {
+                File.Move(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName));
+                Console.WriteLine("1개 파일을 이동헀습니다.");
+            }
+            ReadCommand();
+            return;
         }
 
         /// <summary>
