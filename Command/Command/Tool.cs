@@ -75,7 +75,6 @@ namespace Command.Command
         public static void GetFileInformation(string command, out string sourcePath, out string sourceName, out string destinationPath, out string destinationName)
         {
             List<string> words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
-            words.RemoveAt(0);
 
             // 값 할당
             sourcePath = "";

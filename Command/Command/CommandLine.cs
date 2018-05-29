@@ -247,6 +247,7 @@ namespace Command.Command
                 
             List<string> words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
             words.RemoveAt(0);
+            command = Tool.Command(words);
 
             string sourcePath, sourceName;
             string destinationPath, destinationName;
