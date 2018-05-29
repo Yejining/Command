@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\CommandLine.cs" />
+    <Compile Include="Command\Tool.cs" />
     <Compile Include="Data\Constant.cs" />
     <Compile Include="Data\FolderPath.cs" />
     <Compile Include="Data\SubFileDirectoryVO.cs" />
