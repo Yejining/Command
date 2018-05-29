@@ -26,6 +26,9 @@ namespace Command.Data
         public const string DELETE_BEFORE_AMPERSAND = "[^&]*(?=&)";
         public const string UNC_PATH_DETECTER = "^[\\\\]{2,}?";
         public const string DRIVE_DETECTER = ".*(?=:)";
+        public const string YES = "^[Y/y]";
+        public const string NO = "^[N/n]";
+        public const string ALL = "^[A/a]";
 
         // CD ERROR
         public const string PATH_ERROR = "지정된 경로를 찾을 수 없습니다.";

@@ -36,6 +36,17 @@ namespace Command.IOException
         }
 
         /// <summary>
+        /// 사용자에게 질문을 출력해주고 답을 얻어 반환하는 메소드입니다.
+        /// </summary>
+        /// <param name="question"></param>
+        /// <returns>사용자 답변</returns>
+        public string GetAnswer(string question)
+        {
+            Console.Write(question);
+            return inputProcessor.CommandFromUser();
+        }
+
+        /// <summary>
         /// help 명령어 실행시 도움말을 출력해주는 메소드입니다.
         /// </summary>
         public void PrintHelp()
