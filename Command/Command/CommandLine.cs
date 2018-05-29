@@ -53,7 +53,7 @@ namespace Command.Command
             {
                 command += $"{word} ";
             }
-            command = command.Remove(command.Length - 1);
+            if (command.Length != 0) command = command.Remove(command.Length - 1);
             
             switch (words[0].ToLower())
             {
@@ -200,7 +200,7 @@ namespace Command.Command
             {
                 command += $"{word} ";
             }
-            command.Remove(command.Length - 1);
+            if (command.Length != 0) command.Remove(command.Length - 1);
 
             // 지정된 경로를 찾을 수 없는 경우
             if (!Directory.Exists(command))
@@ -284,7 +284,7 @@ namespace Command.Command
             {
                 command += $"{word} ";
             }
-            command = command.Remove(command.Length - 1);
+            if (command.Length != 0) command = command.Remove(command.Length - 1);
 
             // 경로 나누기
             // 1. 띄어쓰기 기준으로 나누기
@@ -317,89 +317,6 @@ namespace Command.Command
             return Path.GetFullPath(new Uri(path).LocalPath)
                        .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                        .ToUpperInvariant();
-        }
-
-        /// <summary>
-        /// Copy 명령어를 실행하는 메소드입니다.
-        /// </summary>
-        /// <param name="command">명령어</param>
-        public void Copy(string command)
-        {
-            // 경로에 쌍따옴표가 없다고 가정
-            List<string> words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
-            words.RemoveAt(0);
-
-            string sourcePath, sourceName;
-            string destinationPath, destinationName;
-
-            GetFileInformation(command, out sourcePath, out sourceName, out destinationPath, out destinationName);
-
-            // 파일 이름을 입력하지 않은 경우
-            if (sourceName.Length == 0)
-            {
-                Console.WriteLine("파일을 지정하지 않았습니다.");
-                ReadCommand();
-                return;
-            }
-
-            // 존재하지 않는 경로에서 복사하려는 경우
-            if (!Directory.Exists(sourcePath))
-            {
-                Console.WriteLine("지정된 경로를 찾을 수 없습니다.");
-                ReadCommand();
-                return;
-            }
-
-            // 존재하지 않는 파일을 복사하려는 경우
-            if (!File.Exists(Path.Combine(sourcePath, sourceName)) && Directory.Exists(sourcePath))
-            {
-                Console.WriteLine("지정된 파일을 찾을 수 없습니다.");
-                ReadCommand();
-                return;
-            }
-
-            // 존재하지 않는 경로로 복사하는 경우
-            if (!Directory.Exists(destinationPath))
-            {
-                Console.WriteLine("지정된 경로를 찾을 수 없습니다.");
-                Console.WriteLine("\t0개 파일이 복사되었습니다.");
-                ReadCommand();
-                return;
-            }
-
-            // 복사하려는 파일이 이미 경로에 존재하는 경우
-            if (File.Exists(Path.Combine(destinationPath, destinationName)))
-            {
-                string userAnswer = outputProcessor.GetAnswer($"{destinationName}을(를) 덮었쓰시겠습니까? (Yes/No/All): ");
-
-                while (true)
-                {
-                    if (Regex.IsMatch(userAnswer, Constant.YES) || Regex.IsMatch(userAnswer, Constant.ALL))
-                    {
-                        File.Copy(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName), true);
-                        Console.WriteLine("\t1개 파일이 복사되었습니다.");
-                        break;
-                    }
-                    else if (Regex.IsMatch(userAnswer, Constant.NO))
-                    {
-                        Console.WriteLine("\t0개 파일이 복사되었습니다.");
-                        break;
-                    }
-                    else
-                    {
-                        userAnswer = outputProcessor.GetAnswer($"{destinationName}을(를) 덮었쓰시겠습니까? (Yes/No/All): ");
-                    }
-                }
-
-                ReadCommand();
-                return;
-            }
-
-            // 일반
-            File.Copy(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName), true);
-            Console.WriteLine("\t1개 파일이 복사되었습니다.");
-            ReadCommand();
-            return;
         }
 
         /// <summary>
@@ -496,6 +413,12 @@ namespace Command.Command
                 return;
             }
 
+            // copy의 경우 복사할 파일 이름이 없는 경우
+            // 해당 경로에 복사
+            
+
+            // 접근할 수 없는 구역으로 copy나 move를 시도할 경우
+
             // 일반
             if (mode == Constant.COPY)
                 File.Copy(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName), true);
@@ -523,7 +446,8 @@ namespace Command.Command
             // directoryName
             if (Directory.Exists(filePath))
             {
-                directoryName = Path.GetDirectoryName(allPath);
+                if (string.Compare(filePath, "c:\\") == 0) directoryName = filePath;
+                else directoryName = Path.GetDirectoryName(allPath);
             }
             else if (string.Compare(fileName, allPath) == 0)
             {
@@ -575,64 +499,6 @@ namespace Command.Command
             {
                 GetFileNameAndDirectoryName(words[1], out destinationName, out destinationPath);
             }
-        }
-
-        /// <summary>
-        /// Move 명령어를 실행하는 메소드입니다.
-        /// </summary>
-        /// <param name="command">명령어</param>
-        public void Move(string command)
-        {
-            // 경로에 쌍따옴표가 없다고 가정
-            // 정상적인 경로가 입력될 것으로 가정
-            // 지정된 파일이 있을 것으로 가정
-            // getdirectoryname, getfilename 오류 수정해야 함
-            List<string> words;
-            words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
-            words.RemoveAt(0);
-
-            string sourcePath, sourceName;
-            string destinationPath, destinationName;
-            bool isPathEqual;
-
-            sourcePath = Path.GetDirectoryName(words[0]);
-            if (sourcePath.Length == 0) sourcePath = folderPath.Path;
-            sourceName = Path.GetFileName(words[0]);
-
-            if (words.Count != 1)
-            {
-                destinationPath = Path.GetDirectoryName(words[1]);
-                if (destinationPath.Length == 0) destinationPath = folderPath.Path;
-                destinationName = Path.GetFileName(words[1]);
-                if (destinationName.Length == 0) destinationName = sourceName;
-            } 
-            else
-            {
-                destinationPath = folderPath.Path;
-                destinationName = "";
-            }
-
-            isPathEqual = NormalizePath(sourcePath) == NormalizePath(destinationPath);
-
-            if (isPathEqual)
-            {
-                if (destinationName.Length == 0)
-                {
-                    destinationName = sourceName;
-                }
-                if (string.Compare(sourceName, destinationName) != 0)
-                {
-                    File.Move(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName));
-                }
-                Console.WriteLine("1개 파일을 이동했습니다.");
-            }
-            else
-            {
-                File.Move(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName));
-                Console.WriteLine("1개 파일을 이동헀습니다.");
-            }
-            ReadCommand();
-            return;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System.Management;
 using System.Collections;
 using System.Text;
 using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 
 using Command.Data;
 
@@ -117,7 +118,22 @@ namespace Command.IOException
             long size = 0;
             foreach (SubFileDirectoryVO sub in ordered)
             {
-                Console.WriteLine($"{sub.Date}\t{sub.Time}\t{sub.Size}\t{sub.Name}");
+                string time = sub.Time; ;
+                if (sub.Time.Remove(0, 4).ToString()[0] == ':') time = sub.Time.Insert(3, "0");
+
+                Console.Write($"{sub.Date}  {time}    ");
+                if (sub.Size == 0)
+                {
+                    Console.Write("<DIR>");
+                }
+                else
+                {
+                    string subSize = sub.Size.ToString().PadLeft(10);
+                    Console.SetCursorPosition(30, Console.CursorTop);
+                    Console.Write(subSize);
+                }
+                Console.SetCursorPosition(41, Console.CursorTop);
+                Console.WriteLine(sub.Name);
                 size += sub.Size;
             }
             Console.WriteLine($"{fileCount}개의 파일\t{size} 바이트");
