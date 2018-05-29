@@ -106,7 +106,7 @@ namespace Command.Command
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             foreach (DriveInfo drive in allDrives)
             {
-                if (string.Compare(driveName, drive.ToString(), true) == 0)
+                if (driveName[0] ==drive.ToString().ToLower()[0])
                 {
                     return true;
                 }

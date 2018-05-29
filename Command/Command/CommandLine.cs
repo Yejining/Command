@@ -114,7 +114,7 @@ namespace Command.Command
                 ExecuteBasedOnAmpersand(newCommand);
                 return;
             }
-            else if (words[0] == currentDirectory.Remove(currentDirectory.Length - 1))
+            else if (words[0] == currentDirectory)
             {
                 Console.WriteLine(folderPath.Path);
                 ExecuteBasedOnAmpersand(newCommand);
@@ -139,8 +139,25 @@ namespace Command.Command
                 return;
             }
 
+            // .과 관련한 예외처리
+            string path = words[0];
+            if (Regex.IsMatch(path, Constant.LIMIT_DOT))
+            {
+                ExecuteBasedOnAmpersand(newCommand);
+                return;
+            }
+
+            // 상위 디렉터리로 이동
+            if (Regex.IsMatch(path, Constant.UPPER_FOLDER))
+            {
+                MatchCollection matches = Regex.Matches(path, Constant.UPPER_FOLDER);
+                folderPath.SetUpperDirectory(matches.Count);
+                ExecuteBasedOnAmpersand(newCommand);
+                return;
+            }
+
             // 경로 이동
-            folderPath.SetCurrentDirectory(words[0]);
+            folderPath.SetCurrentDirectory(path);
             ExecuteBasedOnAmpersand(newCommand);
             return;
         }

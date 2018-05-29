@@ -40,6 +40,25 @@ namespace Command.Data
         }
 
         /// <summary>
+        /// count만큼 상위 폴더로 이동하는 메소드입니다.
+        /// </summary>
+        /// <param name="count">상위 폴더로 이동하는 횟수</param>
+        public void SetUpperDirectory(int count)
+        {
+            DirectoryInfo directory;
+
+            for (int counter = 0; counter < count; counter++)
+            {
+                directory = Directory.GetParent(path);
+                if (directory != directory.Root)
+                {
+                    Directory.SetCurrentDirectory(directory.ToString());
+                    path = Directory.GetCurrentDirectory();
+                }
+            }
+        }
+
+        /// <summary>
         /// 경로를 변경하는 메소드입니다.
         /// </summary>
         /// <param name="path">새로운 경로</param>
