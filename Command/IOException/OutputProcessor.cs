@@ -46,6 +46,7 @@ namespace Command.IOException
             DriveInfo drive = new DriveInfo(path);
             DirectoryInfo dInfo = new DirectoryInfo(path);
             DirectorySecurity dSecurity = dInfo.GetAccessControl();
+            FileInfo info;
 
             // 드라이브 볼륨
             if (drive.VolumeLabel.Length == 0) Console.WriteLine($" {path[0].ToString().ToUpper()} 드라이브의 볼륨에는 이름이 없습니다.");
@@ -72,10 +73,10 @@ namespace Command.IOException
             foreach (string subFolder in folders)
             {
                 string folder = Path.Combine(path, subFolder);
-                DirectoryInfo info = new DirectoryInfo(folder);
-                if ((info.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                dInfo = new DirectoryInfo(folder);
+                if ((dInfo.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                 {
-                    subFileDirectoryVOList.Add(new SubFileDirectoryVO { Date = info.LastAccessTime.ToShortDateString(), Time = info.LastAccessTime.ToShortTimeString(), Name = info.Name, Size = 0 });
+                    subFileDirectoryVOList.Add(new SubFileDirectoryVO { Date = dInfo.LastAccessTime.ToShortDateString(), Time = dInfo.LastAccessTime.ToShortTimeString(), Name = dInfo.Name, Size = 0 });
                     folderCount++;
                 }
             }
@@ -83,13 +84,19 @@ namespace Command.IOException
             foreach (string subFile in files)
             {
                 string file = Path.Combine(path, subFile);
-                FileInfo info = new FileInfo(file);
+                info = new FileInfo(file);
                 if ((info.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                 {
                     subFileDirectoryVOList.Add(new SubFileDirectoryVO { Date = info.LastAccessTime.ToShortDateString(), Time = info.LastAccessTime.ToShortTimeString(), Name = info.Name, Size = info.Length });
                     fileCount++;
                 }
             }
+
+            // current directory, parent directory 추가
+            info = new FileInfo(path);
+            subFileDirectoryVOList.Add(new SubFileDirectoryVO { Date = info.LastAccessTime.ToShortDateString(), Time = info.LastAccessTime.ToShortTimeString(), Name = ".", Size = 0 });
+            subFileDirectoryVOList.Add(new SubFileDirectoryVO { Date = info.LastAccessTime.ToShortDateString(), Time = info.LastAccessTime.ToShortTimeString(), Name = "..", Size = 0 });
+            folderCount += 2;
 
             IOrderedEnumerable<SubFileDirectoryVO> ordered = subFileDirectoryVOList.OrderBy(x => x.Name);
             // 출력
@@ -114,8 +121,14 @@ namespace Command.IOException
                 Console.WriteLine(sub.Name);
                 size += sub.Size;
             }
-            Console.WriteLine($"{fileCount}개의 파일\t{size} 바이트");
-            Console.WriteLine($"{folderCount}개의 디렉터리\t{drive.TotalFreeSpace} 바이트 남음");
+            Console.SetCursorPosition(6, Console.CursorTop);
+            Console.WriteLine($"{fileCount.ToString().PadLeft(10)}개 파일");
+            Console.SetCursorPosition(6, Console.CursorTop);
+            Console.Write($"{folderCount.ToString().PadLeft(10)}개 디렉터리");
+            Console.SetCursorPosition(30, Console.CursorTop - 1);
+            Console.WriteLine($"{size.ToString().PadLeft(15)} 바이트");
+            Console.SetCursorPosition(30, Console.CursorTop);
+            Console.Write($"{drive.TotalFreeSpace.ToString().PadLeft(15)} 바이트 남음");
         }
 
 
