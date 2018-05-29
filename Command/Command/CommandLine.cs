@@ -39,69 +39,41 @@ namespace Command.Command
         /// </summary>
         public void ExecuteCommand(string command)
         {
-            string[] words = command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries);
-
-            if (words.Count() == 0)
+            if (command.Length == 0)
             {
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
                 ReadCommand();
                 return;
             }
 
-            command = "";
-            foreach(string word in words)
-            {
-                command += $"{word} ";
-            }
-            if (command.Length != 0) command = command.Remove(command.Length - 1);
-            
-            switch (words[0].ToLower())
-            {
-                case "cd":
-                    CD(command);
-                    return;
-                case "cls":
-                    Console.Clear();
-                    ReadCommand();
-                    return;
-                case "help":
-                    outputProcessor.PrintHelp();
-                    Console.WriteLine();
-                    ReadCommand();
-                    return;
-                case "exit":
-                    return;
-                default:
-                    FilterValidOrder(command.ToLower());
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// ReadCommand()에서 실행되지 않은 유효한 명령어들을 찾아내는 메소드입니다.
-        /// </summary>
-        /// <param name="command">명령어</param>
-        public void FilterValidOrder(string command)
-        {
-            // cd 명령어
-            if (Regex.IsMatch(command.ToLower(), Constant.VALID_CD))
+            if (Regex.IsMatch(command.ToLower(), Constant.VALID_CD))        // CD
             {
                 CD(command);
                 return;
             }
-            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_DIR))
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_DIR))  // DIR
             {
                 DIR(command.ToLower());
                 return;
             }
-            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_COPY))
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_COPY)) // COPY
             {
                 CopyOrMove(command.ToLower());
                 return;
             }
-            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_MOVE))
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_MOVE)) // MOVE
             {
                 CopyOrMove(command.ToLower());
+                return;
+            }
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_EXIT)) // EXIT
+            {
+                return;
+            }
+            else if (Regex.IsMatch(command.ToLower(), Constant.VALID_CLS))  // CLS
+            {
+                Console.Clear();
+                ReadCommand();
                 return;
             }
             else

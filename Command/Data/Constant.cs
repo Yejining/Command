@@ -17,6 +17,8 @@ namespace Command.Data
         public const string VALID_DIR = "^(dir).*";
         public const string VALID_COPY = "^(copy).*";
         public const string VALID_MOVE = "^(move).*";
+        public const string VALID_EXIT = "^(exit).*";
+        public const string VALID_CLS = "^(cls).*";
         public const string DETECT_DOUBLE_QUOTATION_AFTER_DIR = "^(dir\").*";
         public const string DELETE_BEFORE_DOUBLE_QUOTATION = "^(dir).*(?=\")";
         public const string NEGLIGIBLE = "^[;,=]+$";
