@@ -42,9 +42,10 @@ namespace Command.Data
         public const string CD = "CD";
         public const string DIR = "DIR";
         public const string CLS = "CLS";
-        public const string HELPa = "HELP";
-        public const string COPY = "COPY";
-        public const string MOVE = "MOVE";
+
+        // 기능 번호
+        public const int COPY = 0;
+        public const int MOVE = 1;
 
         // 키보드 키 상수
         public const int ESC = 0;
