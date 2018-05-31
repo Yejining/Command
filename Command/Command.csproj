@@ -63,6 +63,7 @@
     <Compile Include="IOException\InputProcessor.cs" />
     <Compile Include="IOException\OutputProcessor.cs" />
     <Compile Include="IO\InputProcessor.cs" />
+    <Compile Include="IO\OutputProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
