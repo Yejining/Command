@@ -74,7 +74,7 @@ namespace Command.Command
                 string newPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), path));
 
                 if (Directory.Exists(Directory.GetParent(newPath).ToString()))
-                    Console.WriteLine("파일을 찾을 수 없습니다.\n");
+                    dir.FileExistenceError(path);
                 else if (Directory.Exists(Directory.GetParent(Directory.GetParent(newPath).ToString()).ToString()))
                     Console.WriteLine("지정된 파일을 찾을 수 없습니다.\n");
                 else
@@ -102,11 +102,11 @@ namespace Command.Command
                 if (Directory.Exists(newPath) || File.Exists(newPath))
                     dir.PrintDirectory(newPath);
                 else
-                    Console.WriteLine("파일을 찾을 수 없습니다.\n");
+                    dir.FileExistenceError(newPath);
             }
             else
             {
-                Console.WriteLine("파일을 찾을 수 없습니다.\n");
+                dir.FileExistenceError(path);
             }
         }
 
@@ -121,7 +121,7 @@ namespace Command.Command
                 // 드라이브 입력이 없는 경우
                 if (drive.Length == 0)
                 {
-                    Console.WriteLine("파일을 찾을 수 없습니다.\n");
+                    dir.FileExistenceError(path);
                     return;
                 }
                 // 입력된 드라이브가 존재하지 않는 경우
@@ -140,12 +140,16 @@ namespace Command.Command
                 {
                     if (Directory.Exists(path) || File.Exists(path))
                         dir.PrintDirectory(path);
-                    else
+                    else if (Directory.Exists(Directory.GetParent(path).ToString()))
+                        dir.FileExistenceError(path);
+                    else if (Directory.Exists(Directory.GetParent(Directory.GetParent(path).ToString()).ToString()))
                         Console.WriteLine("지정된 파일을 찾을 수 없습니다.\n");
+                    else
+                        Console.WriteLine("지정된 경로를 찾을 수 없습니다.\n");
                 }
                 else
                 {
-                    Console.WriteLine("파일을 찾을 수 없습니다.\n");
+                    dir.FileExistenceError(path);
                 }
             }
             // ':'가 없는 경우
@@ -155,8 +159,12 @@ namespace Command.Command
 
                 if (Directory.Exists(newPath) || File.Exists(newPath))
                     dir.PrintDirectory(newPath);
+                else if (Directory.Exists(Directory.GetParent(newPath).ToString()))
+                    dir.FileExistenceError(newPath);
+                else if (Directory.Exists(Directory.GetParent(Directory.GetParent(newPath).ToString()).ToString()))
+                    Console.WriteLine("지정된 파일을 찾을 수 없습니다.\n");
                 else
-                    Console.WriteLine("파일을 찾을 수 없습니다.\n");
+                    Console.WriteLine("지정된 경로를 찾을 수 없습니다.\n");
             }
         }
 
@@ -201,6 +209,16 @@ namespace Command.Command
                 }
             }
 
+            return false;
+        }
+
+        public bool IsRootDirectory(string path)
+        {
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (path.ToLower() == drive.ToString().ToLower())
+                    return true;
+            }
             return false;
         }
     }
