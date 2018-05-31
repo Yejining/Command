@@ -45,9 +45,22 @@ namespace Command.Command
 
         }
 
-        public void Exit(string command)
+        public bool Exit(string command)
         {
+            // 명령어 가공
+            string newCommand = command.Remove(0, 4);
 
+            // 명령어 뒤에 다른 문자가 없는 경우
+            if (newCommand.Length == 0)
+                return true;
+
+            // 명령어 뒤에 다른 문자가 있는 경우
+            if (newCommand[0] == '(' || newCommand[0] == ' ' || !Regex.IsMatch(newCommand, "[^&^+^=^\\\\^,^.^/]"))
+                return true;
+            else
+                Console.WriteLine($"\'{command}\'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.");
+
+            return false;
         }
     }
 }

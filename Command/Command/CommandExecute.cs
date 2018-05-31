@@ -53,7 +53,7 @@ namespace Command.Command
                         command = command.Replace('/', '\\');
                         break;
                     case "EXIT":
-                        function.Exit(command);
+                        if (function.Exit(command)) return;
                         break;
                     default:
                         break;
