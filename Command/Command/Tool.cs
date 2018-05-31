@@ -217,5 +217,26 @@ namespace Command.Command
 
             return words;
         }
+
+        /// <summary>
+        /// word를 특정한 기준으로 잘라 forword와 backword로 반환하는 메소드입니다.
+        /// </summary>
+        /// <param name="word">단어</param>
+        /// <param name="pattern1">정규식 패턴1</param>
+        /// <param name="pattern2">정규식 패턴2</param>
+        /// <param name="forword">word에서 잘려진 앞부분</param>
+        /// <param name="backword">word에서 잘려진 뒷부분</param>
+        public static void Split(string word, string pattern1, string pattern2, out string forword, out string backword)
+        {
+            Regex regex;
+
+            // 패턴 이전 명령어
+            regex = new Regex(pattern1);
+            forword = regex.Replace(word, "", 1);
+
+            // 패턴 이후 명령어
+            regex = new Regex(pattern2);
+            backword = regex.Replace(word, "", 1);
+        }
     }
 }

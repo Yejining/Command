@@ -13,12 +13,14 @@ namespace Command.Data
         // 정규식
         public static char[] SEPERATOR = { ' ' }; 
         public const string VALID_LETTER = "[0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣[`~!@#$%^&*()\\-_=+\\{\\}\\[\\]\\\\\\|:;\"\'<>,.?/ ]";
-        public const string VALID_CD = "\\s*(cd).*";
-        public const string VALID_DIR = "\\s*(dir).*";
-        public const string VALID_COPY = "\\s*(copy).*";
-        public const string VALID_MOVE = "\\s*(move).*";
-        public const string VALID_EXIT = "\\s*(exit).*";
-        public const string VALID_CLS = "\\s*(cls).*";
+        public const string VALID_CD = "^(cd)";
+        public const string VALID_DIR = "^(dir)";
+        public const string VALID_CLS = "^(cls)";
+        public const string VALID_HELP = "^(help)";
+        public const string VALID_COPY = "^(copy)";
+        public const string VALID_MOVE = "^(move)";
+        public const string VALID_EXIT = "^(exit)";
+        
         public const string DETECT_DOUBLE_QUOTATION_AFTER_DIR = "^(dir\").*";
         public const string DELETE_BEFORE_DOUBLE_QUOTATION = "^(dir).*(?=\")";
         public const string NEGLIGIBLE = "^[;,=]+$";

@@ -12,9 +12,8 @@ namespace Command
     {
         static void Main(string[] args)
         {
-            CommandLine commandLine = new CommandLine();
-
-            commandLine.RunCommand();
+            CommandExecute input = new CommandExecute();
+            input.StartProgram();
         }
     }
 }
