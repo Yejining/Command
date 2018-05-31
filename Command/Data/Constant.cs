@@ -11,7 +11,7 @@ namespace Command.Data
         public const string START = "Microsoft Windows [Version 10.0.16299.431]\n(c) 2017 Microsoft Corporation. All rights reserved.\n";
 
         // 정규식
-        public static char[] SEPERATOR = { ' ' }; 
+        public static char[] SEPERATOR = { ' ' };
         public const string VALID_LETTER = "[0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣[`~!@#$%^&*()\\-_=+\\{\\}\\[\\]\\\\\\|:;\"\'<>,.?/ ]";
         public const string VALID_CD = "^(cd)";
         public const string VALID_DIR = "^(dir)";
@@ -35,6 +35,11 @@ namespace Command.Data
         public const string YES = "^[Y/y]";
         public const string NO = "^[N/n]";
         public const string ALL = "^[A/a]";
+        
+        public const string BEFORE_QUOTATION = "\"(?<=\").*";
+        public const string AFTER_QUOTATION = ".*(?=\")\"";
+        public const string BEFORE_AMPERSAND = "&(?<=&).*";
+        public const string AFTER_AMPERSAND = ".*(?=&)&";
 
         // CD ERROR
         public const string PATH_ERROR = "지정된 경로를 찾을 수 없습니다.";

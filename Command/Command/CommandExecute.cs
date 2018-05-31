@@ -15,6 +15,7 @@ namespace Command.Command
         ChangeDirectory cd = new ChangeDirectory();
         ChangeDirectoryException exception = new ChangeDirectoryException();
         CommandFunction function = new CommandFunction();
+        DirectoryCommand dir = new DirectoryCommand();
         private string command;
 
         public void StartProgram()
@@ -39,6 +40,7 @@ namespace Command.Command
                         break;
                     case "DIR":
                         command = command.Replace('/', '\\');
+                        dir.ExecuteDIR(command.ToLower());
                         break;
                     case "CLS":
                         function.ClearScreen(command);

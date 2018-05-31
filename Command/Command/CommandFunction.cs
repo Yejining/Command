@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using Command.IO;
+using Command.Data;
 
 namespace Command.Command
 {
@@ -52,13 +53,13 @@ namespace Command.Command
             // 명령어 뒤에 다른 문자가 없는 경우
             if (newCommand.Length == 0)
             {
-                output.PrintHelp();
+                PrintHelp();
                 return;
             }
 
             // 명령어 뒤에 다른 문자가 있는 경우
             if (!Regex.IsMatch(newCommand, "[^&^\"^\\s]"))
-                output.PrintHelp();
+                PrintHelp();
             else
                 Console.WriteLine($"\'{command}\'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.");
 
@@ -81,6 +82,14 @@ namespace Command.Command
                 Console.WriteLine($"\'{command}\'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.");
 
             return false;
+        }
+
+        public void PrintHelp()
+        {
+            foreach (string help in Constant.HELP)
+            {
+                Console.WriteLine(help);
+            }
         }
     }
 }

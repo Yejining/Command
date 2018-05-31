@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Management.Instrumentation" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +56,8 @@
     <Compile Include="Command\CommandFunction.cs" />
     <Compile Include="Command\CommandLine.cs" />
     <Compile Include="Command\ChangeDirectoryException.cs" />
+    <Compile Include="Command\DirectoryCommand.cs" />
+    <Compile Include="Command\DirectoryCommandException.cs" />
     <Compile Include="Command\Tool.cs" />
     <Compile Include="Data\Constant.cs" />
     <Compile Include="Data\FolderPath.cs" />
@@ -64,6 +67,7 @@
     <Compile Include="IOException\OutputProcessor.cs" />
     <Compile Include="IO\InputProcessor.cs" />
     <Compile Include="IO\OutputProcessor.cs" />
+    <Compile Include="IO\PathExtraction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
