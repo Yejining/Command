@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Command\ChangeDirectory.cs" />
     <Compile Include="Command\CommandExecute.cs" />
+    <Compile Include="Command\CommandFunction.cs" />
     <Compile Include="Command\CommandLine.cs" />
     <Compile Include="Command\ChangeDirectoryException.cs" />
     <Compile Include="Command\Tool.cs" />

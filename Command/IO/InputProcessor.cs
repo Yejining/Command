@@ -19,9 +19,6 @@ namespace Command.IO
 
         public string RefineCommand(string command)
         {
-            // '/'를 '\'로 변환
-            command = command.Replace('/', '\\');
-
             // 명령어 입력 전 공백 제거
             Regex space = new Regex("^\\s*(?![(\\s)])");
             return space.Replace(command, "");
