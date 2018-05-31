@@ -24,7 +24,6 @@ namespace Command.Command
                 case '.':   // '.'으로 시작하는 경우
                     return StartWithDot(renewedCommand, out renewedCommand);
                 default:
-                    Console.WriteLine($"\'cd{command}\'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.");
                     break;
             }
             
@@ -34,7 +33,14 @@ namespace Command.Command
                 renewedCommand = renewedCommand.Remove(0, word.Length);
                 return true;
             }
-            
+            // .이 포함된 경우
+            else if (Regex.IsMatch(word, "\\."))
+            {
+                Console.WriteLine("지정된 경로를 찾을 수 없습니다.\n");
+                return false;
+            }
+
+            Console.WriteLine($"\'cd{command}\'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.\n");
             return false;
         }
 
