@@ -11,8 +11,6 @@ namespace Command.Command
 {
     class CommandFunction
     {
-        OutputProcessor output = new OutputProcessor();
-
         public void ClearScreen(string command)
         {
             // 명령어 가공

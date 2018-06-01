@@ -10,9 +10,8 @@ namespace Command.Data
         // 시작화면
         public const string START = "Microsoft Windows [Version 10.0.16299.431]\n(c) 2017 Microsoft Corporation. All rights reserved.\n";
 
-        // 정규식
+        // 명령어 확인 정규식
         public static char[] SEPERATOR = { ' ' };
-        public const string VALID_LETTER = "[0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣[`~!@#$%^&*()\\-_=+\\{\\}\\[\\]\\\\\\|:;\"\'<>,.?/ ]";
         public const string VALID_CD = "^(cd)";
         public const string VALID_DIR = "^(dir)";
         public const string VALID_CLS = "^(cls)";
@@ -21,54 +20,15 @@ namespace Command.Data
         public const string VALID_MOVE = "^(move)";
         public const string VALID_EXIT = "^(exit)";
         public const string VALID_CHANGE_DRIVE = "^[a-zA-Z]:\\s*$";
-        
-        public const string DETECT_DOUBLE_QUOTATION_AFTER_DIR = "^(dir\").*";
-        public const string DELETE_BEFORE_DOUBLE_QUOTATION = "^(dir).*(?=\")";
         public const string NEGLIGIBLE = "^[;,=]+$";
-        public const string CONSIDERABLE = "[.:\\\\/]";
-        public const string NEGLIGIBLE_TO_DELETE = "^[;,=]*(?=[.\\\\/])|^[;,=]*(?=[a-zA-Z]:)";
-        public const string KEEP_BEFORE_AMPERSAND = "&(?<=&).*";
-        public const string DELETE_BEFORE_AMPERSAND = "[^&]*(?=&)";
-        public const string UNC_PATH_DETECTER = "^[\\\\]{2,}?";
-        public const string DRIVE_DETECTER = ".*(?=:)";
-        public const string LIMIT_DOT = "[\\.]{3,}?";
-        public const string UPPER_FOLDER = "(\\.\\.)[\\\\]*";
+
+        // 사용자 응답 판별 정규식
         public const string YES = "^[Y/y]";
         public const string NO = "^[N/n]";
         public const string ALL = "^[A/a]";
-        
-        public const string BEFORE_QUOTATION = "\"(?<=\").*";
-        public const string AFTER_QUOTATION = ".*(?=\")\"";
-        public const string BEFORE_AMPERSAND = "&(?<=&).*";
-        public const string AFTER_AMPERSAND = ".*(?=&)&";
 
-        // CD ERROR
-        public const string PATH_ERROR = "지정된 경로를 찾을 수 없습니다.";
-        public const string UNC_PATH_ERROR = "CMD에서 현재 디렉터리로 UNC 경로를 지원하지 않습니다.";
-
+        // 메시지
         public const string NOT_EXCUTABLE = "은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는\n배치 파일이 아닙니다.";
-        public const string UNFINDABLE_DRIVE = "시스템이 지정된 드라이브를 찾을 수 없습니다.";
-        public const string PATH_MISINPUT = "파일 이름, 디렉터리 이름 또는 볼륨 레이블 구분이 잘못되었습니다.";
-
-        // 기능 이름
-        public const string CD = "CD";
-        public const string DIR = "DIR";
-        public const string CLS = "CLS";
-
-        // 기능 번호
-        public const int COPY = 0;
-        public const int MOVE = 1;
-
-        // 키보드 키 상수
-        public const int ESC = 0;
-        public const int ENTER = 1;
-        public const int TAB = 2;
-        public const int UP = 3;
-        public const int DOWN = 4;
-        public const int LEFT = 5;
-        public const int RIGHT = 6;
-        public const int BACK = 7;
-        public const int CHARACTER = 8;
 
         // HELP 명령어
         public static string[] HELP =

@@ -55,21 +55,14 @@
     <Compile Include="Command\CommandException.cs" />
     <Compile Include="Command\CommandExecute.cs" />
     <Compile Include="Command\CommandFunction.cs" />
-    <Compile Include="Command\CommandLine.cs" />
     <Compile Include="Command\ChangeDirectoryException.cs" />
     <Compile Include="Command\CopyCommand.cs" />
     <Compile Include="Command\DirectoryCommand.cs" />
     <Compile Include="Command\DirectoryCommandException.cs" />
     <Compile Include="Command\MoveCommand.cs" />
-    <Compile Include="Command\Tool.cs" />
     <Compile Include="Data\Constant.cs" />
-    <Compile Include="Data\FolderPath.cs" />
     <Compile Include="Data\SubFileDirectoryVO.cs" />
-    <Compile Include="IOException\CursorPosition.cs" />
-    <Compile Include="IOException\InputProcessor.cs" />
-    <Compile Include="IOException\OutputProcessor.cs" />
     <Compile Include="IO\InputProcessor.cs" />
-    <Compile Include="IO\OutputProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
