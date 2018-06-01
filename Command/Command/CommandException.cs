@@ -27,38 +27,30 @@ namespace Command.Command
             // destination
             if (words.Count != 1)
                 GetFileNameAndDirectoryPath(words[1], out destinationName, out destinationPath);
+            else
+            {
+                destinationPath = Path.GetFullPath(Directory.GetCurrentDirectory());
+                if (destinationName.Length == 0)
+                    destinationName = sourceName;
+            }
         }
 
         public static void GetFileNameAndDirectoryPath(string allPath, out string fileName, out string directoryPath)
         {
+            fileName = "";
+            directoryPath = "";
+
             if (Regex.IsMatch(allPath, "\\\\"))
             {
                 fileName = Path.GetFileName(allPath);
                 Regex regex = new Regex(fileName.ToLower(), RegexOptions.RightToLeft);
                 directoryPath = Path.GetFullPath(regex.Replace(allPath.ToLower(), "", 1));
+                directoryPath = directoryPath.Remove(directoryPath.Length - 1);
             }
             else
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), allPath);
-                
-                if (File.Exists(path))
-                {
-                    directoryPath = Directory.GetCurrentDirectory();
-                    fileName = allPath;
-                    return;
-                }
-                
-                path = path.Replace(Path.GetFileName(path), "");
-                if (Directory.Exists(path))
-                {
-                    directoryPath = path;
-                    fileName = "";
-                }
-                else
-                {
-                    directoryPath = "";
-                    fileName = "";
-                }
+                directoryPath = Directory.GetCurrentDirectory();
+                fileName = allPath;
             }
         }
 

@@ -19,6 +19,7 @@ namespace Command.Command
             words.RemoveAt(0);
             switch (words.Count)
             {
+                case 1:
                 case 2:
                     command = command.Remove(0, 5);
                     break;
