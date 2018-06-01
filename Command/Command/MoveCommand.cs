@@ -37,7 +37,14 @@ namespace Command.Command
             if (!exception.IsValidMoveCommand(sourcePath, sourceName, destinationPath, destinationName))
                 return;
 
-            // 덮어쓰는 경우
+            // 덮어쓰는 경우(자동)
+            if (sourcePath == destinationPath && sourceName.ToLower() == destinationName.ToLower())
+            {
+                Console.WriteLine("\t1개 파일을 이동했습니다.\n");
+                return;
+            }
+
+            // 덮어쓰는 경우(수동)
             if (exception.IsOverwriteCase(sourcePath, sourceName, destinationPath, destinationName))
             {
                 Overwrite(sourcePath, sourceName, destinationPath, destinationName);

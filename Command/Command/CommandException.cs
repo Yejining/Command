@@ -28,11 +28,10 @@ namespace Command.Command
             if (words.Count != 1)
                 GetFileNameAndDirectoryPath(words[1], out destinationName, out destinationPath);
             else
-            {
                 destinationPath = Path.GetFullPath(Directory.GetCurrentDirectory());
-                if (destinationName.Length == 0)
-                    destinationName = sourceName;
-            }
+
+            if (destinationName.Length == 0)
+                destinationName = sourceName;
         }
 
         public static void GetFileNameAndDirectoryPath(string allPath, out string fileName, out string directoryPath)
@@ -40,7 +39,12 @@ namespace Command.Command
             fileName = "";
             directoryPath = "";
 
-            if (Regex.IsMatch(allPath, "\\\\"))
+            if (Directory.Exists(allPath) && !File.Exists(allPath))
+            {
+                directoryPath = Path.GetFullPath(allPath);
+                fileName = "";
+            }
+            else if (Regex.IsMatch(allPath, "\\\\"))
             {
                 fileName = Path.GetFileName(allPath);
                 Regex regex = new Regex(fileName.ToLower(), RegexOptions.RightToLeft);
@@ -128,7 +132,7 @@ namespace Command.Command
             destinationPath = Path.GetFullPath(destinationPath);
 
             // 같은 경로, 다른 파일로 이동하는 경우
-            if (sourcePath == destinationPath && sourceName.ToLower() != destinationName.ToLower())
+            if (sourcePath == destinationPath && sourceName.ToLower() != destinationName.ToLower() && IsFileExist(destinationPath, destinationName))
                 return true;
             // 다른 경로로 이동하면서 파일이 존재하는 경우
             else if (sourcePath != destinationPath && IsFileExist(destinationPath, destinationName))
