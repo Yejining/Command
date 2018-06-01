@@ -16,6 +16,7 @@ namespace Command.Command
         ChangeDirectoryException exception = new ChangeDirectoryException();
         CommandFunction function = new CommandFunction();
         DirectoryCommand dir = new DirectoryCommand();
+        CopyCommand copy = new CopyCommand();
         private string command;
 
         public void StartProgram()
@@ -50,6 +51,7 @@ namespace Command.Command
                         break;
                     case "COPY":
                         command = command.Replace('/', '\\');
+                        copy.Copy(command.ToLower());
                         break;
                     case "MOVE":
                         command = command.Replace('/', '\\');
