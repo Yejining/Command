@@ -65,16 +65,19 @@ namespace Command.Command
 
         public void StartWithSlash(string path)
         {
+            string drive = Directory.GetDirectoryRoot(Directory.GetCurrentDirectory());
+            drive = drive.Remove(drive.Length - 1);
+
             if (Regex.IsMatch(path, "^\\\\$|^\\\\[^\\\\]") && (Directory.Exists(path) || File.Exists(path)))
             {
-                    dir.PrintDirectory(path);
+                    dir.PrintDirectory(drive + path);
             }
             else if (Regex.IsMatch(path, "^\\\\$|^\\\\[^\\\\]"))
             {
                 string newPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), path));
 
                 if (Directory.Exists(Directory.GetParent(newPath).ToString()))
-                    dir.FileExistenceError(path);
+                    dir.FileExistenceError(drive + path);
                 else if (Directory.Exists(Directory.GetParent(Directory.GetParent(newPath).ToString()).ToString()))
                     Console.WriteLine("지정된 파일을 찾을 수 없습니다.\n");
                 else
