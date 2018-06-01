@@ -15,6 +15,10 @@ namespace Command.Command
 
         public void ExecuteChangeDirectory(string command)
         {
+            // unc 경로 확인
+            if (!exception.CheckUNCPath(command))
+                return;
+
             // 명령어 가공
             command = command.Remove(0, 2);
             command = command.Replace("\\\\", "\\");
@@ -62,6 +66,22 @@ namespace Command.Command
             {
                 Console.WriteLine("지정된 경로를 찾을 수 없습니다.\n");
                 return;
+            }
+        }
+
+        public void ChangeDrive(char drive)
+        {
+            if (exception.IsExistDrive(drive.ToString()))
+            {
+                Directory.SetCurrentDirectory($"{drive.ToString().ToUpper()}:\\");
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 2);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.WriteLine("시스템이 지정된 드라이브를 찾을 수 없습니다.\n");
             }
         }
     }

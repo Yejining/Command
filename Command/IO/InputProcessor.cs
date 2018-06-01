@@ -34,6 +34,7 @@ namespace Command.IO
             else if ((Regex.IsMatch(command, Constant.VALID_COPY, RegexOptions.IgnoreCase))) return "COPY";
             else if (Regex.IsMatch(command, Constant.VALID_MOVE, RegexOptions.IgnoreCase)) return "MOVE";
             else if (Regex.IsMatch(command, Constant.VALID_EXIT, RegexOptions.IgnoreCase)) return "EXIT";
+            else if (Regex.IsMatch(command, Constant.VALID_CHANGE_DRIVE, RegexOptions.IgnoreCase)) return "DRIVE";
             else return "default";
         }
     }

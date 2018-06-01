@@ -20,6 +20,7 @@ namespace Command.Data
         public const string VALID_COPY = "^(copy)";
         public const string VALID_MOVE = "^(move)";
         public const string VALID_EXIT = "^(exit)";
+        public const string VALID_CHANGE_DRIVE = "^[a-zA-Z]:\\s*$";
         
         public const string DETECT_DOUBLE_QUOTATION_AFTER_DIR = "^(dir\").*";
         public const string DELETE_BEFORE_DOUBLE_QUOTATION = "^(dir).*(?=\")";

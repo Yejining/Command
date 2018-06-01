@@ -45,6 +45,23 @@ namespace Command.Command
             return false;
         }
 
+        public bool CheckUNCPath(string command)
+        {
+            Regex regex = new Regex("cd\\s*(?=\\\\)");
+
+            if (Regex.IsMatch(command, "^\\\\\\\\"))
+                Console.WriteLine($"\'{command}\'");
+            else if (Regex.IsMatch(command, "^(cd)\\\\\\\\"))
+                Console.WriteLine($"\'{command.Remove(0, 2)}\'");
+            else if (Regex.IsMatch(command, "^(cd)\\s*\\\\\\\\"))
+                Console.WriteLine($"\'{regex.Replace(command, "")}\'");
+            else
+                return true;
+
+            Console.WriteLine("CMD에서 현재 디렉터리로 UNC 경로를 지원하지 않습니다.\n");
+            return false;
+        }
+
         public bool StartWithDot(string command, out string renewedCommand)
         {
             renewedCommand = command;
@@ -76,16 +93,16 @@ namespace Command.Command
 
         public bool CheckPath(string command)
         {
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), command));
+
+            // 드라이브 바꾸는지 검사
+            if (ConvertDrive(path))
+                return false;
+
             // 파일 이름, 디렉터리 이름 또는 볼륨 레이블 오류
             if (!IsCorrectDivision(command))
                 return false;
 
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), command));
-
-            // 드라이브 바꾸는지 검사
-            if (!ConvertDrive(path))
-                return false;
-            
             if (Directory.Exists(path))
             {
                 Directory.SetCurrentDirectory(path);
@@ -113,6 +130,7 @@ namespace Command.Command
         public bool IsExistDrive(string drive)
         {
             drive += ":\\";
+            drive = drive.ToUpper();
 
             foreach (string localDrive in Directory.GetLogicalDrives())
                 if (drive == localDrive)
@@ -127,21 +145,19 @@ namespace Command.Command
             string currentDrive = Directory.GetDirectoryRoot(Directory.GetCurrentDirectory());
             string pathDrive = Directory.GetDirectoryRoot(path);
 
-            // 현재 드라이브와 사용자가 입력한 드라이브가 다를 경우
-            if (currentDrive != pathDrive)
-            {
-                foreach(string drive in Directory.GetLogicalDrives())
-                {
-                    if (drive == pathDrive)
-                    {
-                        Directory.SetCurrentDirectory(Directory.GetDirectoryRoot(path));
-                        return true;
-                    }
-                }
-
-                Console.WriteLine("시스템이 지정된 드라이브를 찾을 수 없습니다.\n");
+            if (!Regex.IsMatch(path, "^[a-zA-Z]:\\\\$"))
                 return false;
+
+            foreach (string drive in Directory.GetLogicalDrives())
+            {
+                if (drive == pathDrive)
+                {
+                    Directory.SetCurrentDirectory(Directory.GetDirectoryRoot(path));
+                    return true;
+                }
             }
+
+            Console.WriteLine("시스템이 지정된 드라이브를 찾을 수 없습니다.\n");
 
             return true;
         }

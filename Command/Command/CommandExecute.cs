@@ -38,6 +38,9 @@ namespace Command.Command
                 {
                     case "":
                         break;
+                    case "DRIVE":
+                        cd.ChangeDrive(command[0]);
+                        break;
                     case "CD":
                         command = command.Replace('/', '\\');
                         cd.ExecuteChangeDirectory(command.ToLower());
