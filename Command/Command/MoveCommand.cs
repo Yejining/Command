@@ -9,16 +9,17 @@ using Command.Data;
 
 namespace Command.Command
 {
-    class CopyCommand
+    class MoveCommand
     {
         CommandException exception = new CommandException();
 
-        public void Copy(string command)
+        public void Move(string command)
         {
             List<string> words = new List<string>(command.Split(Constant.SEPERATOR, StringSplitOptions.RemoveEmptyEntries));
             words.RemoveAt(0);
             switch (words.Count)
             {
+                case 1:
                 case 2:
                     command = command.Remove(0, 5);
                     break;
@@ -33,24 +34,24 @@ namespace Command.Command
             exception.GetFileInformation(command, out sourcePath, out sourceName, out destinationPath, out destinationName);
 
             // 에러 탐색
-            if (!exception.IsValidCopyCommand(sourcePath, sourceName, destinationPath, destinationName))
+            if (!exception.IsValidMoveCommand(sourcePath, sourceName, destinationPath, destinationName))
                 return;
 
             // 덮어쓰는 경우
-            if (exception.IsFileExist(destinationPath, destinationName))
+            if (exception.IsOverwriteCase(sourcePath, sourceName, destinationPath, destinationName))
             {
                 Overwrite(sourcePath, sourceName, destinationPath, destinationName);
                 return;
             }
 
-            // 복사
-            File.Copy(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName), true);
-            Console.WriteLine($"\t1개 파일이 복사되었습니다.\n");
+            // Move
+            File.Move(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName));
+            Console.WriteLine("\t1개 파일을 이동했습니다.\n");
         }
 
         public void Overwrite(string sourcePath, string sourceName, string destinationPath, string destinationName)
         {
-            string question = $"{destinationName}을(를) 덮었쓰시겠습니까? (Yes/No/All): ";
+            string question = $"{Path.Combine(destinationPath, destinationName)}을(를) 덮었쓰시겠습니까? (Yes/No/All): ";
 
             Console.Write(question);
             string answer = Console.ReadLine();
@@ -60,12 +61,13 @@ namespace Command.Command
                 if (Regex.IsMatch(answer, Constant.YES) || Regex.IsMatch(answer, Constant.ALL))
                 {
                     File.Copy(Path.Combine(sourcePath, sourceName), Path.Combine(destinationPath, destinationName), true);
-                    Console.WriteLine("\t1개 파일이 복사되었습니다.\n");
+                    File.Delete(Path.Combine(sourcePath, sourceName));
+                    Console.WriteLine("\t1개 파일을 이동했습니다.\n");
                     break;
                 }
                 else if (Regex.IsMatch(answer, Constant.NO))
                 {
-                    Console.WriteLine($"\t0개 파일이 복사되었습니다.\n");
+                    Console.WriteLine("\t0개 파일을 이동했습니다.\n");
                     break;
                 }
                 else

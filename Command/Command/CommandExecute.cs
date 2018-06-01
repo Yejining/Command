@@ -17,6 +17,7 @@ namespace Command.Command
         CommandFunction function = new CommandFunction();
         DirectoryCommand dir = new DirectoryCommand();
         CopyCommand copy = new CopyCommand();
+        MoveCommand move = new MoveCommand();
         private string command;
 
         public void StartProgram()
@@ -51,10 +52,11 @@ namespace Command.Command
                         break;
                     case "COPY":
                         command = command.Replace('/', '\\');
-                        copy.Copy(command.ToLower());
+                        copy.Copy(command);
                         break;
                     case "MOVE":
                         command = command.Replace('/', '\\');
+                        move.Move(command);
                         break;
                     case "EXIT":
                         if (function.Exit(command)) return;

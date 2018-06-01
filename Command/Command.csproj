@@ -60,6 +60,7 @@
     <Compile Include="Command\CopyCommand.cs" />
     <Compile Include="Command\DirectoryCommand.cs" />
     <Compile Include="Command\DirectoryCommandException.cs" />
+    <Compile Include="Command\MoveCommand.cs" />
     <Compile Include="Command\Tool.cs" />
     <Compile Include="Data\Constant.cs" />
     <Compile Include="Data\FolderPath.cs" />
