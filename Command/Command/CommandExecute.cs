@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using Command.IO;
+using Command.Data;
 
 namespace Command.Command
 {
@@ -23,6 +24,7 @@ namespace Command.Command
         public void StartProgram()
         {
             Directory.SetCurrentDirectory(exception.GetHomeDirectory());
+            Console.WriteLine(Constant.START);
             ExecuteCommand();
         }
 
@@ -62,6 +64,7 @@ namespace Command.Command
                         if (function.Exit(command)) return;
                         break;
                     default:
+                        Console.WriteLine($"\'{command}\'{Constant.NOT_EXCUTABLE}\n");
                         break;
                 }
             }
